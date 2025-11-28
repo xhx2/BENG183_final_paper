@@ -12,7 +12,8 @@ One important characteristic of scRNA-seq data is the 'dropout' phenomenon, wher
 
 ## scImpute
 
-![alt]()
+![Figure 1. Overview of scImpute]()
+
 
 
 
