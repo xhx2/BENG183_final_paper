@@ -18,12 +18,14 @@ scImpute is a two-stage statistical method built on the philosophy of targeted i
 
 ### Identification of likely dropouts
 
-scImpute first learns each gene's dropout probability by fitting a mixture model
+* scImpute first learns each gene's dropout probability by fitting a mixture model
+* Based on these probabilities, scImpute automatically identifies which observed zero
 
 
 <img src="figure_1_scImpute.png" width="1000">
 
 **Figure 1. Overview of the scImpute method** scImpute firstly learns each gene's dropout probability in each cell by fitting a mixture model. Next, scImpute imputes the highly probable dropout values in cell $j$ (gene set $A_j$) by borrowing information of the same gene in other similar cells, which are selected based on gene set $B_j$ (not severely affected by dropout events)
+
 
 
 
