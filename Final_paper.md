@@ -16,15 +16,27 @@ Existing imputation methods, such as **MAGIC** and **SAVER**, attempt to adddres
 
 scImpute is a two-stage statistical method built on the philosophy of targeted imputation and cell similarity. 
 
+<img src="figure_1_scImpute.png" width="1000">
+
+**Figure 1. Overview of the scImpute method** scImpute firstly learns each gene's dropout probability in each cell by fitting a mixture model. Next, scImpute imputes the highly probable dropout values in cell $j$ (gene set $A_j$) by borrowing information of the same gene in other similar cells, which are selected based on gene set $B_j$ (not severely affected by dropout events)
+
 ### Identification of likely dropouts
+
+scImpute models the expression of each gene within a cell subpopulation using a mixture model composed of two components. The first component is a Gamma distribution used to account for the dropouts, while the second component is a Normal distribution to represent the actual gene expression levels. For each gene $i$, its expression in cell subpopulation $k$ is modeled as a random variable $X_i^{(k)} with density function: 
+
+$f_{X_i}^{(k)}(x)=\lambda_i^{(k)}\mathrm{Gamma}(x;\alpha_i^{(k)})+(1-\lambda_i^{(k)})\mathrm{Normal}(x;\mu_i^{(k)})$, where $\lambda_i^{(k)}$ is gene $i$'s dropout rate in cell subpopulation $k$, $\alpha_i^{(k)}$, $\beta_i^{(k)}$ are the shape and rate parameters of Gamma distribution, and $\mu_i^{(k)}$, $\alpha_i^{(k)}$ are the mean and standard deviation of Normal distribution. The intuition behind this mixture model is that if a gene has high expression and low vairation in most cells within a cell subpopulation, a zero count is more likely to be a dropout value; on the other hand, if a gene has constantly low or medium expression with high variation, then a zero count may reflect real biological variability. 
+
+### Learning Cell Similarity
+
+To impute the values in set $A_j$, scImpute need to borrow information from similar cells. Cell similarity is learned only using the high-confidence, accurately measured genes in set $B_j#.  
+
 
 * scImpute first learns each gene's dropout probability by fitting a mixture model
 * Based on these probabilities, scImpute automatically identifies which observed zero
 
 
-<img src="figure_1_scImpute.png" width="1000">
 
-**Figure 1. Overview of the scImpute method** scImpute firstly learns each gene's dropout probability in each cell by fitting a mixture model. Next, scImpute imputes the highly probable dropout values in cell $j$ (gene set $A_j$) by borrowing information of the same gene in other similar cells, which are selected based on gene set $B_j$ (not severely affected by dropout events)
+
 
 
 
