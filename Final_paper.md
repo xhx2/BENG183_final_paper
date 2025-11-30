@@ -38,9 +38,9 @@ $$
 \text{subject \ to \ } \beta^{(j)} \ge 0
 $$
 
-$N_j$ represents the indices of cells that are candidate neighbors of cell $j$. The response $X_{B_j,j}$ is a vector representing the $B_j$ rows in the $j$-th column of $X_j$
+$N_j$ represents the indices of cells that are candidate neighbors of cell $j$. The response $X_{B_j,j}$ is a vector representing the $B_j$ rows in the $j$-th column of $X$, the design matrix $X_{B_j,N_j}$ is a sub-matrix of $X$ with dimensions $\| B_j \| \times \|N_j\|$, and the coefficients $\beta^{(j)}$ is a vector of length $\| N_j \|$. 
 
-The resulting sparse coefficient vector $\hat{ \beta^{(j)} }$ represents the weighted contribution of each similar neighbor cell to the expression profile of cell $j$. 
+$\hat{ \beta^{(j)} }$ represents the weighted contribution of each similar neighbor cell to the expression profile of cell $j$. NNLS has the property of leadning to sparse estimated coefficient vector $\hat{ \beta^{(j)} }$ whose components may have exact zeros, so NNLS can be used to select similar cells of cell $j$ from its neighbors $N_j$. 
 
 ### Imputation of Dropout Values
 
@@ -54,9 +54,16 @@ X_{i, N_j}\,\hat{\beta}^{(j)}, & i \in A_j \quad \text{(Value imputed using neig
 \end{cases}
 $$
 
-
+## Results
 
 ### 
+
+## Advantages and Limitation
+
+An attractive advantage of scImpute is that it can be incorporated into most existing pipelines or downstream analysis of scRNA-seq data, such as normalization, differential expression analysis, clustering and classification. 
+
+
+
 
 
 
