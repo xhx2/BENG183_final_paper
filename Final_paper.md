@@ -93,9 +93,10 @@ Figure 6 shows that imputed counts also represent the true biological variation 
 
 
 
-## Advantages and Limitation
+## Discussion Advantages and Limitation
 
 An attractive advantage of scImpute is that it can be incorporated into most existing pipelines or downstream analysis of scRNA-seq data, such as normalization, differential expression analysis, clustering and classification. 
+
 
 
 
