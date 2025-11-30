@@ -24,19 +24,16 @@ scImpute is a two-stage statistical method built on the philosophy of targeted i
 
 scImpute models the expression of each gene within a cell subpopulation using a mixture model composed of two components. The first component is a Gamma distribution used to account for the dropouts, while the second component is a Normal distribution to represent the actual gene expression levels. For each gene $i$, its expression in cell subpopulation $k$ is modeled as a random variable $X_i^{(k)} with density function: 
 
-$f_{X_i}^{(k)}(x)=\lambda_i^{(k)}\mathrm{Gamma}(x;\alpha_i^{(k)})+(1-\lambda_i^{(k)})\mathrm{Normal}(x;\mu_i^{(k)})$, where $\lambda_i^{(k)}$ is gene $i$'s dropout rate in cell subpopulation $k$, $\alpha_i^{(k)}$, $\beta_i^{(k)}$ are the shape and rate parameters of Gamma distribution, and $\mu_i^{(k)}$, $\alpha_i^{(k)}$ are the mean and standard deviation of Normal distribution. The intuition behind this mixture model is that if a gene has high expression and low vairation in most cells within a cell subpopulation, a zero count is more likely to be a dropout value; on the other hand, if a gene has constantly low or medium expression with high variation, then a zero count may reflect real biological variability. 
+$f_{X_i}^{(k)}(x)=\lambda_i^{(k)}\mathrm{Gamma}(x;\alpha_i^{(k)})+(1-\lambda_i^{(k)})\mathrm{Normal}(x;\mu_i^{(k)})$, where $\lambda_i^{(k)}$ is gene $i$'s dropout rate in cell subpopulation $k$, $\alpha_i^{(k)}$, $\beta_i^{(k)}$ are the shape and rate parameters of Gamma distribution, and $\mu_i^{(k)}$, $\alpha_i^{(k)}$ are the mean and standard deviation of Normal distribution. The intuition behind this mixture model is that if a gene has high expression and low vairation in most cells within a cell subpopulation, a zero count is more likely to be a dropout value; on the other hand, if a gene has constantly low or medium expression with high variation, then a zero count may reflect real biological variability. The parameters in mixture model are estimated by the Expectation-Maximization (EM) algorithm, and we denote their estimate as $\hat{\lambda_i^{(k)}}$, $\hat{\alpha_i^{(k)}}$, $\hat{\beta_i^{(k)}}$, $\hat{\mu_i^{(k)}}$ and $\hat{\sigma_i^{(k)}}$
 
 ### Learning Cell Similarity
 
+For each cell $j$, select a gene set $A_j$ in need of imputation based on genes' dropout probabilities in cell $j$: $A_j= \lbrace i:d_{ij} \ge t \rbrace$, where $t$ is a threshold on dropout probabilities. There is also a gene set $B_j=\lbrace i:d_{ij}<t \rbrace$
 To impute the values in set $A_j$, scImpute need to borrow information from similar cells. Cell similarity is learned only using the high-confidence, accurately measured genes in set $B_j#.  
 
 
-* scImpute first learns each gene's dropout probability by fitting a mixture model
-* Based on these probabilities, scImpute automatically identifies which observed zero
 
-
-
-
+### 
 
 
 
