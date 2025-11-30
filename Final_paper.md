@@ -58,9 +58,16 @@ $$
 
 ### 
 
+
+<img src="figure2_ERCC.png" width="1000">
+
+**Figure 1. Overview of the scImpute method** scImpute firstly learns each gene's dropout probability in each cell by fitting a mixture model. Next, scImpute imputes the highly probable dropout values in cell $j$ (gene set $A_j$) by borrowing information of the same gene in other similar cells, which are selected based on gene set $B_j$ (not severely affected by dropout events)
+
+
 ## Advantages and Limitation
 
 An attractive advantage of scImpute is that it can be incorporated into most existing pipelines or downstream analysis of scRNA-seq data, such as normalization, differential expression analysis, clustering and classification. 
+
 
 
 
