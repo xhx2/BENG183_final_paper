@@ -91,11 +91,18 @@ Figure 6 shows that imputed counts also represent the true biological variation 
 
 **Figure 6 Violin plots showing the log10(count+1) of nine cell cycle genes** The expression levels of these genes belong to three phases (G1, G2M, and S). scImpute has corrected the dropout values of cell cycle genes. 
 
+### Use Simulation Study to test the efficacy of scImpute in enhancing the identification of cell types
+
+Simulate expression data of three cell types $c_1 \, c_2$ and $c_3$, each with 50 cells, and 810 among 20000 genes are truly differentially expressed.Even though the three cell types are clearly distinguishable when we apply principal component analysis (PCA) to the complete data, they become less well separated in the raw data with dropout events. The within-cluster sum-of-squares calculated based on the first two principal components (PCs) increases from 94 in the complete data to 2646 in the raw data. 
 
 
-## Discussion Advantages and Limitation
+
+## Discussion 
+
+The key novelty of scImpute lies in its selective imputation approach. It focuses only on imputing the missing expression values of genes likely afffected by dropouts, while retaining the expression levels of genes that are largely unaffceted. Hence, it can reduce technical variation resulted from scRNA-seq and better represent cell-to-cell biological variation, while it also avoids introducing excess biases. 
 
 An attractive advantage of scImpute is that it can be incorporated into most existing pipelines or downstream analysis of scRNA-seq data, such as normalization, differential expression analysis, clustering and classification. 
+
 
 
 
