@@ -71,15 +71,32 @@ Figure 3 further shows that the read counts and true concentrations also present
 <img src="figure3_ERCC_four_cells.png" width="1000">
 
 **Figure 3. scImpute improves the dropouts in the ERCC RNA scripts** The y-axis and x-axis give the ERCC spike-ins’ log10(count+1) and log10
-(concentration) in four randomly selected mouse cortex cells. The imputed data present stronger linear relationships between the true concentrations and
-the observed counts
+(concentration) in four randomly selected mouse cortex cells. The imputed data present stronger linear relationships between the true concentrations and the observed counts
 
-### scImpute correctly imputes the dropout values of 892 annotated cell cycle genes in 182 embryonic stem cells (ESCs)
+### scImpute correctly imputes the dropout values of 892 annotated cell cycle genes in 182 embryonic stem cells (ESCs) that had been staged for cell cycle phases (G1, G2M and S)
+
+These genes are know to modulate the cell cycle and are expected to have non-zero expression during different stages of the cell cycle. Before imputation, 22.5% raw counts of the cell cycle genes are zeros, which are highly likely due to dropouts. The data are normalized by sequencing depths instead of ERCC spike-ins. After imputations, most of the dropout values are corrected, and true dynamics of these genes in the cell cycle are recovered （Figs 4 and 5）.
+
+<img src="figure4_ESC_heatmap.png" width="1000"> 
+
+**Figure 4 Heatmaps	showing	the	log10(count+1)	of	the	892	cell	cycle	genes	before	and	after	imputation.** . Rows	correspond	to	genes,	and	columns	correspond	to	cells.
+
+<img src="figure5_ESC_violin1.png" width="1000"> 
+
+**Figure 5 Expression	of	cell	cycle	genes	before	and	after	imputation.** Violin	plots	showing	the	log10(count+1)	of	the	892	cell	cycle	genes	in	the	three	phases	(G1,	G2M,	and	S).	This	comparison	result	shows	that scImpute	has	successfully	imputed the	dropout	expression	values	of	cell	cycle	genes.
+
+Figure 6 shows that imputed counts also represent the true biological variation in these cell cycles genes. 
+
+<img src="figure6_ESC_violin2.png" width="1000"> 
+
+**Figure 6 Violin plots showing the log10(count+1) of nine cell cycle genes** The expression levels of these genes belong to three phases (G1, G2M, and S). scImpute has corrected the dropout values of cell cycle genes. 
+
 
 
 ## Advantages and Limitation
 
 An attractive advantage of scImpute is that it can be incorporated into most existing pipelines or downstream analysis of scRNA-seq data, such as normalization, differential expression analysis, clustering and classification. 
+
 
 
 
