@@ -83,17 +83,37 @@ These genes are know to modulate the cell cycle and are expected to have non-zer
 
 <img src="figure5_ESC_violin1.png" width="1000"> 
 
-**Figure 5 Expression	of	cell	cycle	genes	before	and	after	imputation.** Violin	plots	showing	the	log10(count+1)	of	the	892	cell	cycle	genes	in	the	three	phases	(G1,	G2M,	and	S).	This	comparison	result	shows	that scImpute	has	successfully	imputed the	dropout	expression	values	of	cell	cycle	genes.
+**Fig. 5 Expression	of	cell	cycle	genes	before	and	after	imputation.** Violin	plots	showing	the	log10(count+1)	of	the	892	cell	cycle	genes	in	the	three	phases	(G1,	G2M,	and	S).	This	comparison	result	shows	that scImpute	has	successfully	imputed the	dropout	expression	values	of	cell	cycle	genes.
 
 Figure 6 shows that imputed counts also represent the true biological variation in these cell cycles genes. 
 
 <img src="figure6_ESC_violin2.png" width="1000"> 
 
-**Figure 6 Violin plots showing the log10(count+1) of nine cell cycle genes** The expression levels of these genes belong to three phases (G1, G2M, and S). scImpute has corrected the dropout values of cell cycle genes. 
+**Fig. 6 Violin plots showing the log10(count+1) of nine cell cycle genes** The expression levels of these genes belong to three phases (G1, G2M, and S). scImpute has corrected the dropout values of cell cycle genes. 
 
 ### Use Simulation Study to test the efficacy of scImpute in enhancing the identification of cell types
 
-Simulate expression data of three cell types $c_1 \, c_2$ and $c_3$, each with 50 cells, and 810 among 20000 genes are truly differentially expressed.Even though the three cell types are clearly distinguishable when we apply principal component analysis (PCA) to the complete data, they become less well separated in the raw data with dropout events. The within-cluster sum-of-squares calculated based on the first two principal components (PCs) increases from 94 in the complete data to 2646 in the raw data. 
+Simulate expression data of three cell types $c_1 \, c_2$ and $c_3$, each with 50 cells, and 810 among 20000 genes are truly differentially expressed.Even though the three cell types are clearly distinguishable when we apply principal component analysis (PCA) to the complete data, they become less well separated in the raw data with dropout events. The within-cluster sum-of-squares calculated based on the first two principal components (PCs) increases from 94 in the complete data to 2646 in the raw data. However, the relationships among the 150 cells are clarified after we apply scImpute. The other two methods MAGIC and SAVER are also able to distinguish the three cell types, but MAGIC introduces artificial signals that largely alter the data and thus the PCA result, while SAVER only slightly improves the clustering result over that of the raw data (Fig7). 
+
+<img src="figure7_simulation1.png" width="1000"> 
+
+**Fig. 4** scImpute corrects dropout values and helps define cellular identity in the simulated data.  
+**a** The first two PCs calculated from the complete data, the raw data, and the imputed data by scImpute, MAGIC, and SAVER. Numbers in the parentheses are the within-cluster sum of squares calculated based on the first two PCs. The within-cluster sum of squares is defined as:
+
+$$
+\sum_{k=1}^{3} \sum_{j=1}^{50} \left\| \mathbf{y}_{kj} - \bar{\mathbf{y}}_{k} \right\|^2 ,
+$$
+
+where
+
+$$
+\bar{\mathbf{y}}_{k} = \frac{1}{50} \sum_{j=1}^{50} \mathbf{y}_{kj}
+$$
+
+and $\mathbf{y}_{kj}$ is a vector of length 2, denoting the first two PCs of cell *j* in cell type $c_k$.
+
+**b** The expression profiles of the 810 true DE genes in the complete, raw, and imputed datasets.
+
 
 
 
@@ -104,9 +124,9 @@ The key novelty of scImpute lies in its selective imputation approach. It focuse
 An attractive advantage of scImpute is that it can be incorporated into most existing pipelines or downstream analysis of scRNA-seq data, such as normalization, differential expression analysis, clustering and classification. 
 
 
+# Reference
 
-
-
+Li, W.V., Li, J.J. An accurate and robust imputation method scImpute for single-cell RNA-seq data. Nat Commun 9, 997 (2018). https://doi.org/10.1038/s41467-018-03405-7
 
 
 
