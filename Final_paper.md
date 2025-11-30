@@ -74,10 +74,13 @@ Figure 3 further shows that the read counts and true concentrations also present
 (concentration) in four randomly selected mouse cortex cells. The imputed data present stronger linear relationships between the true concentrations and
 the observed counts
 
+### scImpute correctly imputes the dropout values of 892 annotated cell cycle genes in 182 embryonic stem cells (ESCs)
+
 
 ## Advantages and Limitation
 
 An attractive advantage of scImpute is that it can be incorporated into most existing pipelines or downstream analysis of scRNA-seq data, such as normalization, differential expression analysis, clustering and classification. 
+
 
 
 
