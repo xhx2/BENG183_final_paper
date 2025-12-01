@@ -24,23 +24,34 @@ scImpute is a two-stage statistical method built on the philosophy of targeted i
 
 scImpute models the expression of each gene within a cell subpopulation using a mixture model composed of two components. The first component is a Gamma distribution used to account for the dropouts, while the second component is a Normal distribution to represent the actual gene expression levels. For each gene $i$, its expression in cell subpopulation $k$ is modeled as a random variable $X_i^{(k)}$ with density function: 
 
-$f_{X_i}^{(k)}(x)=\lambda_i^{(k)}\mathrm{Gamma}(x;\alpha_i^{(k)})+(1-\lambda_i^{(k)})\mathrm{Normal}(x;\mu_i^{(k)})$, where $\lambda_i^{(k)}$ is gene $i$'s dropout rate in cell subpopulation $k$, $\alpha_i^{(k)}$, $\beta_i^{(k)}$ are the shape and rate parameters of Gamma distribution, and $\mu_i^{(k)}$, $\alpha_i^{(k)}$ are the mean and standard deviation of Normal distribution. The intuition behind this mixture model is that if a gene has high expression and low vairation in most cells within a cell subpopulation, a zero count is more likely to be a dropout value; on the other hand, if a gene has constantly low or medium expression with high variation, then a zero count may reflect real biological variability. The parameters in mixture model are estimated by the Expectation-Maximization (EM) algorithm, and we denote their estimate as $\hat{\lambda_i^{(k)}}$, $\hat{\alpha_i^{(k)}}$, $\hat{\beta_i^{(k)}}$, $\hat{\mu_i^{(k)}}$ and $\hat{\sigma_i^{(k)}}$
+$$
+f\_{X\_i}^{(k)}(x)=\lambda\_i^{(k)}\mathrm{Gamma}(x;\alpha\_i^{(k)},\beta\_i^{(k)})+(1-\lambda\_i^{(k)})\mathrm{Normal}(x;\mu\_i^{(k)},\sigma\_i^{(k)})
+$$
+
+where $\lambda\_i^{(k)}$ is gene $i$'s dropout rate in cell subpopulation $k$, $\alpha_i^{(k)}$, $\beta_i^{(k)}$ are the shape and rate parameters of Gamma distribution, and $\mu_i^{(k)}$, $\alpha_i^{(k)}$ are the mean and standard deviation of Normal distribution. The intuition behind this mixture model is that if a gene has high expression and low vairation in most cells within a cell subpopulation, a zero count is more likely to be a dropout value; on the other hand, if a gene has constantly low or medium expression with high variation, then a zero count may reflect real biological variability. The parameters in mixture model are estimated by the Expectation-Maximization (EM) algorithm, and we denote their estimate as $\hat{\lambda_i^{(k)}}$, $\hat{\alpha_i^{(k)}}$, $\hat{\beta_i^{(k)}}$, $\hat{\mu_i^{(k)}}$ and $\hat{\sigma_i^{(k)}}$. It follows that the dropout probablity of gene $i$ in cell $j$, which belongs to subpopulation $k$, can be estimated as 
+
+$$
+d\_{ij}=\frac{\hat{\lambda}\_i^{(k)}\mathrm{Gamma}(x;\hat{\alpha}\_i^{(k)},\hat{\beta}\_i^{(k)})}{\hat{\lambda}\_i^{(k)}\mathrm{Gamma}(x;\hat{\alpha}\_i^{(k)},\hat{\beta}\_i^{(k)})+(1-\hat{\lambda}\_i^{(k)})\mathrm{Normal}(x;\hat{\mu\_i}^{(k)},\hat{\sigma\_i}^{(k)})}
+$$
+
+Therefore, each gene $i$ has an overall dropout rate $\hat{\lambda}\_i^{(k)}$ that is shared by all cells in subpopulation $k$. Gene $i$ also has dropout probabilities $d_{ij}(j=1,2,...,J)$, which may differ across cells. 
+
 
 ### Learning Cell Similarity
 
 For each cell $j$, select a gene set $A_j$ in need of imputation based on genes' dropout probabilities in cell $j$: $A_j= \lbrace i:d_{ij} \ge t \rbrace$, where $t$ is a threshold on dropout probabilities. There is also a gene set $B_j=\lbrace i:d_{ij}<t \rbrace$ which have accurate gene expression with high confidence and do not need imputation. We learn cells' similarities through the gene set $B_j$, and use the non-negative least squares (NNLS) regression:
 
 $$
-\hat{ \beta^{(j)} }=\text{argmin}_{\beta^{(j)}} \lVert X_{B_j,i}-X_{B_j,N_j}\beta^{(j)} \rVert^2_2
+\hat{ \beta } ^{(j)}=\text{argmin}_{\beta^{(j)}} \lVert X_{B_j,i}-X_{B_j,N_j}\beta^{(j)} \rVert^2_2
 $$
 
 $$
 \text{subject \ to \ } \beta^{(j)} \ge 0
 $$
 
-$N_j$ represents the indices of cells that are candidate neighbors of cell $j$. The response $X_{B_j,j}$ is a vector representing the $B_j$ rows in the $j$-th column of $X$, the design matrix $X_{B_j,N_j}$ is a sub-matrix of $X$ with dimensions $\| B_j \| \times \|N_j\|$, and the coefficients $\beta^{(j)}$ is a vector of length $\| N_j \|$. 
+$N_j$ represents the indices of cells that are candidate neighbors of cell $j$. The response $X_{B_j,j}$ is a vector representing the $B_j$ rows in the $j$-th column of $X$, the design matrix $X_{B_j,N_j}$ is a sub-matrix of $X$ with dimensions $\| B_j \| \times \|N_j\|$, and the coefficients $\beta^{(j)}$ is a vector of length $\| N\_j \|$. 
 
-$\hat{ \beta^{(j)} }$ represents the weighted contribution of each similar neighbor cell to the expression profile of cell $j$. NNLS has the property of leadning to sparse estimated coefficient vector $\hat{ \beta^{(j)} }$ whose components may have exact zeros, so NNLS can be used to select similar cells of cell $j$ from its neighbors $N_j$. 
+$\hat{ \beta } ^{(j)}$ represents the weighted contribution of each similar neighbor cell to the expression profile of cell $j$. NNLS has the property of leadning to sparse estimated coefficient vector $\hat{ \beta^{(j)} }$ whose components may have exact zeros, so NNLS can be used to select similar cells of cell $j$ from its neighbors $N_j$. 
 
 ### Imputation of Dropout Values
 
@@ -75,7 +86,7 @@ Figure 3 further shows that the read counts and true concentrations also present
 
 ### scImpute correctly imputes the dropout values of 892 annotated cell cycle genes in 182 embryonic stem cells (ESCs) that had been staged for cell cycle phases (G1, G2M and S)
 
-These genes are know to modulate the cell cycle and are expected to have non-zero expression during different stages of the cell cycle. Before imputation, 22.5% raw counts of the cell cycle genes are zeros, which are highly likely due to dropouts. The data are normalized by sequencing depths instead of ERCC spike-ins. After imputations, most of the dropout values are corrected, and true dynamics of these genes in the cell cycle are recovered （Figs 4 and 5）.
+These genes are know to modulate the cell cycle and are expected to have non-zero expression during different stages of the cell cycle. Before imputation, 22.5% raw counts of the cell cycle genes are zeros, which are highly likely due to dropouts. The data are normalized by sequencing depths instead of ERCC spike-ins. After imputations, most of the dropout values are corrected, and true dynamics of these genes in the cell cycle are recovered (Figs 4 and 5）.
 
 <img src="figure4_ESC_heatmap.png" width="1000"> 
 
@@ -93,28 +104,16 @@ Figure 6 shows that imputed counts also represent the true biological variation 
 
 ### Use Simulation Study to test the efficacy of scImpute in enhancing the identification of cell types
 
-Simulate expression data of three cell types $c_1 \, c_2$ and $c_3$, each with 50 cells, and 810 among 20000 genes are truly differentially expressed.Even though the three cell types are clearly distinguishable when we apply principal component analysis (PCA) to the complete data, they become less well separated in the raw data with dropout events. The within-cluster sum-of-squares calculated based on the first two principal components (PCs) increases from 94 in the complete data to 2646 in the raw data. However, the relationships among the 150 cells are clarified after we apply scImpute. The other two methods MAGIC and SAVER are also able to distinguish the three cell types, but MAGIC introduces artificial signals that largely alter the data and thus the PCA result, while SAVER only slightly improves the clustering result over that of the raw data (Fig7). 
+We simulate expression data of three cell types $c_1 \, c_2$ and $c_3$, each with 50 cells, and 810 among 20000 genes are truly differentially expressed. Even though the three cell types are clearly distinguishable when we apply principal component analysis (PCA) to the complete data, this separation become less apparent in the raw data with dropout events. Specifically, the within-cluster sum-of-squares calculated based on the first two principal components (PCs) increases from 94 in the complete data to 2646 in the raw data. After applying scImpute, however, the relationships among the 150 cells become much clearer. The other two methods MAGIC and SAVER are also able to distinguish the three cell types, but MAGIC tends to introduce artificial signals that substantially alter the data and thus the PCA result, whereas SAVER provides only a modest improvement compared with the clustering result over that of the raw data (Fig7). Moreover, the dropout events obscure the differential pattern and make it harder to detect DE genes. In contrast, the imputed data by scImpute lead to a clearer contrast between the upregulated genes in different cell types, while the imputed data by MAGIC and SAVER fail to recover these underlying patterns (Fig7). 
 
 <img src="figure7_simulation1.png" width="1000"> 
 
-**Fig. 4** scImpute corrects dropout values and helps define cellular identity in the simulated data.  
-**a** The first two PCs calculated from the complete data, the raw data, and the imputed data by scImpute, MAGIC, and SAVER. Numbers in the parentheses are the within-cluster sum of squares calculated based on the first two PCs. The within-cluster sum of squares is defined as:
+**Fig. 7 scImpute corrects dropout values and helps define cellular identity in the simulated data.**   
+**a** The first two PCs calculated from the complete data, the raw data, and the imputed data by scImpute, MAGIC, and SAVER. Numbers in the parentheses are the within-cluster sum of squares calculated based on the first two PCs. The within-cluster sum of squares is defined as $\sum\_{k=1}^{3} \sum\_{j=1}^{50} \lVert {y}\_{kj} - \bar{y}\_{k} \rVert ^2$, where $\bar{y}\_{k} = \frac{1}{50} \sum\_{j=1}$, and $y\_{kj}$ is a vector of length 2, denoting the first two PCs of cell $j$ in cell type $c\_k$. **b** The expression profiles of the 810 true DE genes in the complete, raw, and imputed datasets.
 
-$$
-\sum_{k=1}^{3} \sum_{j=1}^{50} \left\| \mathbf{y}_{kj} - \bar{\mathbf{y}}_{k} \right\|^2 ,
-$$
+We also investigate the impact of dropout prevalence on scImpute's performance. As anticipated, the accuracy of differential expression analysis improves as the dropout rate declines. However, scImpute delivers >80% area under the precision-recall curve (AUPRC) even when zero counts reach 75% of the dataset (Fig. 8). 
 
-where
-
-$$
-\bar{\mathbf{y}}_{k} = \frac{1}{50} \sum_{j=1}^{50} \mathbf{y}_{kj}
-$$
-
-and $\mathbf{y}_{kj}$ is a vector of length 2, denoting the first two PCs of cell *j* in cell type $c_k$.
-
-**b** The expression profiles of the 810 true DE genes in the complete, raw, and imputed datasets.
-
-
+**Fig. 8 Performance	of	scImpute	given	different	dropout	rates	in	raw	simulated	data.** **a**:	The	theoretical	dropout	rates	determined	by	the	double	exponential	function $exp(−\rho \times log\_{10} (\text{count}+1)^2)$,	with $\rho$ varying from 0.01 to 0.19	by a step size of	0.02.	**b-d**: The	precision-recall curves	for	the	identification of differentially expressed genes from	the	imputed	data.
 
 
 ## Discussion 
@@ -127,6 +126,7 @@ An attractive advantage of scImpute is that it can be incorporated into most exi
 # Reference
 
 Li, W.V., Li, J.J. An accurate and robust imputation method scImpute for single-cell RNA-seq data. Nat Commun 9, 997 (2018). https://doi.org/10.1038/s41467-018-03405-7
+
 
 
 
