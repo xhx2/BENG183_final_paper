@@ -1,4 +1,4 @@
-# scImpute
+# Using scImpute for Robust Single Cell RNAseq Imputation
 ### By Hanxiang Xu, Kazune Fei, Yanpei Wang
 
 
@@ -120,12 +120,17 @@ We also investigate the impact of dropout prevalence on scImpute's performance. 
 
 The key novelty of scImpute lies in its selective imputation approach. It focuses only on imputing the missing expression values of genes likely afffected by dropouts, while retaining the expression levels of genes that are largely unaffceted. Hence, it can reduce technical variation resulted from scRNA-seq and better represent cell-to-cell biological variation, while it also avoids introducing excess biases. 
 
-An attractive advantage of scImpute is that it can be incorporated into most existing pipelines or downstream analysis of scRNA-seq data, such as normalization, differential expression analysis, clustering and classification. 
+An attractive advantage of scImpute is that it can be incorporated into most existing pipelines or downstream analysis of scRNA-seq data, such as normalization, differential expression analysis, clustering and classification. scImpute can improve the data quality through an imputation perspective, meaning its applicability is not restricted to a specific task. It takes the raw count matrix as input and outputs as an imputed count matrix of the same dimensions, allowing it to be seamlessly combined with other computational tools without reformatting. 
+
+scImpute is easy to use as it only invloves two parameters that are easily understood and selected. The first parameter $K$ denotes the potential number of cell populations, it is selected based on the clustering outcome of the raw data and the resolution desired by the researcher. Selecting a small $K$ allows scImpute to borrow more information across cells, while a large $K$ leads to a more cautious imputation process. The second parameter $t$ acts as a cutoff for dropout probabilities. The method is robust to variations in this parameter, and a default setting of 0.5 is often adequate for most scRNA-seq datasets. 
+
+scImpute demonstrates good scalability as the number of cells increases. Its computational performance can be significantly enhanced by performing an initial filtering step on cells based on biological knowledge. A future direction is to improve imputation efficiency when dropout rates are severely high, typical of droplet-based technologies.  
 
 
 # Reference
 
 Li, W.V., Li, J.J. An accurate and robust imputation method scImpute for single-cell RNA-seq data. Nat Commun 9, 997 (2018). https://doi.org/10.1038/s41467-018-03405-7
+
 
 
 
