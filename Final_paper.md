@@ -84,7 +84,7 @@ Figure 3 further shows that the read counts and true concentrations also present
 **Figure 3. scImpute improves the dropouts in the ERCC RNA scripts** The y-axis and x-axis give the ERCC spike-ins’ log10(count+1) and log10
 (concentration) in four randomly selected mouse cortex cells. The imputed data present stronger linear relationships between the true concentrations and the observed counts
 
-### scImpute correctly imputes the dropout values of 892 annotated cell cycle genes in 182 embryonic stem cells (ESCs) that had been staged for cell cycle phases (G1, G2M and S)
+#### scImpute correctly imputes the dropout values of 892 annotated cell cycle genes in 182 embryonic stem cells (ESCs) that had been staged for cell cycle phases (G1, G2M and S)
 
 These genes are know to modulate the cell cycle and are expected to have non-zero expression during different stages of the cell cycle. Before imputation, 22.5% raw counts of the cell cycle genes are zeros, which are highly likely due to dropouts. The data are normalized by sequencing depths instead of ERCC spike-ins. After imputations, most of the dropout values are corrected, and true dynamics of these genes in the cell cycle are recovered (Figs 4 and 5）.
 
@@ -102,7 +102,7 @@ Figure 6 shows that imputed counts also represent the true biological variation 
 
 **Fig. 6 Violin plots showing the log10(count+1) of nine cell cycle genes** The expression levels of these genes belong to three phases (G1, G2M, and S). scImpute has corrected the dropout values of cell cycle genes. 
 
-### Use Simulation Study to test the efficacy of scImpute in enhancing the identification of cell types
+#### Use Simulation Study to test the efficacy of scImpute in enhancing the identification of cell types
 
 We simulate expression data of three cell types $c_1 \, c_2$ and $c_3$, each with 50 cells, and 810 among 20000 genes are truly differentially expressed. Even though the three cell types are clearly distinguishable when we apply principal component analysis (PCA) to the complete data, this separation become less apparent in the raw data with dropout events. Specifically, the within-cluster sum-of-squares calculated based on the first two principal components (PCs) increases from 94 in the complete data to 2646 in the raw data. After applying scImpute, however, the relationships among the 150 cells become much clearer. The other two methods MAGIC and SAVER are also able to distinguish the three cell types, but MAGIC tends to introduce artificial signals that substantially alter the data and thus the PCA result, whereas SAVER provides only a modest improvement compared with the clustering result over that of the raw data (Fig7). Moreover, the dropout events obscure the differential pattern and make it harder to detect DE genes. In contrast, the imputed data by scImpute lead to a clearer contrast between the upregulated genes in different cell types, while the imputed data by MAGIC and SAVER fail to recover these underlying patterns (Fig7). 
 
@@ -113,8 +113,19 @@ We simulate expression data of three cell types $c_1 \, c_2$ and $c_3$, each wit
 
 We also investigate the impact of dropout prevalence on scImpute's performance. As anticipated, the accuracy of differential expression analysis improves as the dropout rate declines. However, scImpute delivers >80% area under the precision-recall curve (AUPRC) even when zero counts reach 75% of the dataset (Fig. 8). 
 
+<img src="figure8_simulation2.png" width="1000"> 
+
 **Fig. 8 Performance	of	scImpute	given	different	dropout	rates	in	raw	simulated	data.** **a**:	The	theoretical	dropout	rates	determined	by	the	double	exponential	function $exp(−\rho \times log\_{10} (\text{count}+1)^2)$,	with $\rho$ varying from 0.01 to 0.19	by a step size of	0.02.	**b-d**: The	precision-recall curves	for	the	identification of differentially expressed genes from	the	imputed	data.
 
+### scImpute improves the identification of cell subpopulations
+
+To demonstrate scImpute's ability to facilitate the identification of cell types or cells subpopulations, scImpute was applied to two real scRNA-seq datasets. The first dataset consists of mouse preimplantation embryos22 and contains RNA-seq profiles of 268 single cells spanning 10 developmental stages. Due in part to dropout events, 70.0% of the entries in the raw count matrix are zeros. Figure 9 plotted the long10-transformed read counts of two 16-cell-stage cells to visualize the dropout phenomenon. 
+
+<img src="Figure9_raw_zero_counts.png" width="1000"> 
+
+Although the cells are from the same developmental stage, many genes show moderate expression in one cell but zero counts in the other. After applying the scImpute, this issue was alleviated, and the Pearson correlation betweeen the two cells increases from 0.72 to 0.82 (Fig. 9), largely due to fewer genes being expressed in only one of the cells. While MAGIC yields an even higher correlation (0.95), it also introduces artificially large expression values absent from the raw data, suggesting a loss of genuine biological variation. SAVER, on the other hand, produces little noticeable change. We further compare the imputed data by examining clustering performance in the first two principal components (PCs). Although the major developmental stages can be roughly distinguished in the raw data, the scImpute-processed data form more compact and coherent clusters (Fig. 5). MAGIC produces a clean developmental trajectory; however, many cells within the same stage collapse to nearly identical PC scores, indicating potential over-smoothing and loss of meaningful variation. Notably, scImpute is the only method capable of identifying outlier cells. To quantitatively evaluate clustering performance, we applied spectral clustering23 on the first two PCs with several choices of cluster numbers (k = 6, 8, 10, 12, 14), matching the hierarchical structure of the true developmental sub-stages. Using four metrics—adjusted Rand index24, Jaccard index25, normalized mutual information (NMI)26, and purity—all ranging from 0 to 1 and with 1 indicating perfect agreement, scImpute consistently outperformed the raw data, MAGIC, and SAVER (Supplementary Fig. 6). These results suggest that scImpute enhances the detection of cell subpopulations by effectively imputing dropout values.
+
+We next applied scImpute to a large droplet-based dataset10 comprising 4,500 peripheral blood mononuclear cells (PBMCs) from nine immune cell types, each represented by 500 cells. In the raw data, 92.6% of read counts are zeros. t-SNE27 visualization shows that cytotoxic and naive cytotoxic T cells cluster together, and four other T-cell subtypes are not well separated. After scImpute, cytotoxic (label 11) and naive cytotoxic T cells (label 8) become distinguishable, and naive T cells (label 5) and memory T cells (label 3) also separate clearly from the remaining T-cell populations (Fig. 6), demonstrating scImpute’s ability to recover subtle subpopulation structure. In contrast, MAGIC does not improve same-type clustering (Supplementary Fig. 7), and SAVER outputs were not obtained after running the program overnight.
 
 ## Discussion 
 
@@ -130,6 +141,7 @@ scImpute demonstrates good scalability as the number of cells increases. Its com
 # Reference
 
 Li, W.V., Li, J.J. An accurate and robust imputation method scImpute for single-cell RNA-seq data. Nat Commun 9, 997 (2018). https://doi.org/10.1038/s41467-018-03405-7
+
 
 
 
