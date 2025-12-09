@@ -119,13 +119,23 @@ We also investigate the impact of dropout prevalence on scImpute's performance. 
 
 ### scImpute improves the identification of cell subpopulations
 
-To demonstrate scImpute's ability to facilitate the identification of cell types or cells subpopulations, scImpute was applied to two real scRNA-seq datasets. The first dataset consists of mouse preimplantation embryos22 and contains RNA-seq profiles of 268 single cells spanning 10 developmental stages. Due in part to dropout events, 70.0% of the entries in the raw count matrix are zeros. Figure 9 plotted the long10-transformed read counts of two 16-cell-stage cells to visualize the dropout phenomenon. 
+To demonstrate scImpute's ability to facilitate the identification of cell types or cells subpopulations, scImpute was applied to two real scRNA-seq datasets. The first dataset consists of mouse preimplantation embryos22 and contains RNA-seq profiles of 268 single cells spanning 10 developmental stages. Due in part to dropout events, 70.0% of the entries in the raw count matrix are zeros. Figure 9 plotted the long10-transformed read counts of two 16-cell-stage cells to visualize the dropout phenomenon. Although the cells are from the same developmental stage, many genes show moderate expression in one cell but zero counts in the other. After applying the scImpute, this issue was alleviated, and the Pearson correlation betweeen the two cells increases from 0.72 to 0.82, largely due to fewer genes being expressed in only one of the cells. While MAGIC yields an even higher correlation (0.95), it also introduces artificially large expression values absent from the raw data, suggesting a loss of genuine biological variation. SAVER, on the other hand, produces little noticeable change.
 
 <img src="Figure9_raw_zero_counts.png" width="1000"> 
 
-Although the cells are from the same developmental stage, many genes show moderate expression in one cell but zero counts in the other. After applying the scImpute, this issue was alleviated, and the Pearson correlation betweeen the two cells increases from 0.72 to 0.82 (Fig. 9), largely due to fewer genes being expressed in only one of the cells. While MAGIC yields an even higher correlation (0.95), it also introduces artificially large expression values absent from the raw data, suggesting a loss of genuine biological variation. SAVER, on the other hand, produces little noticeable change. We further compare the imputed data by examining clustering performance in the first two principal components (PCs). Although the major developmental stages can be roughly distinguished in the raw data, the scImpute-processed data form more compact and coherent clusters (Fig. 5). MAGIC produces a clean developmental trajectory; however, many cells within the same stage collapse to nearly identical PC scores, indicating potential over-smoothing and loss of meaningful variation. Notably, scImpute is the only method capable of identifying outlier cells. To quantitatively evaluate clustering performance, we applied spectral clustering23 on the first two PCs with several choices of cluster numbers (k = 6, 8, 10, 12, 14), matching the hierarchical structure of the true developmental sub-stages. Using four metrics—adjusted Rand index24, Jaccard index25, normalized mutual information (NMI)26, and purity—all ranging from 0 to 1 and with 1 indicating perfect agreement, scImpute consistently outperformed the raw data, MAGIC, and SAVER (Supplementary Fig. 6). These results suggest that scImpute enhances the detection of cell subpopulations by effectively imputing dropout values.
+We further compare the imputed data by examining clustering performance in the first two principal components (PCs). Although the major developmental stages can be roughly distinguished in the raw data, the imputed data by scImpute output more compact and coherent clusters (Fig. 10). MAGIC produces a clean developmental trajectory; however, many cells within the same stage collapse to nearly identical PC scores, indicating potential over-smoothing and loss of meaningful variation. Notably, scImpute is the only method capable of identifying outlier cells. 
 
-We next applied scImpute to a large droplet-based dataset10 comprising 4,500 peripheral blood mononuclear cells (PBMCs) from nine immune cell types, each represented by 500 cells. In the raw data, 92.6% of read counts are zeros. t-SNE27 visualization shows that cytotoxic and naive cytotoxic T cells cluster together, and four other T-cell subtypes are not well separated. After scImpute, cytotoxic (label 11) and naive cytotoxic T cells (label 8) become distinguishable, and naive T cells (label 5) and memory T cells (label 3) also separate clearly from the remaining T-cell populations (Fig. 6), demonstrating scImpute’s ability to recover subtle subpopulation structure. In contrast, MAGIC does not improve same-type clustering (Supplementary Fig. 7), and SAVER outputs were not obtained after running the program overnight.
+<img src="Figure10_cell_subpopulation1.png" width="1000"> 
+
+To quantitatively evaluate clustering performance, we applied spectral clustering23 on the first two PCs with several choices of cluster numbers (k = 6, 8, 10, 12, 14), matching the hierarchical structure of the true developmental sub-stages. Using four metrics—adjusted Rand index24, Jaccard index25, normalized mutual information (NMI)26, and purity—all ranging from 0 to 1 and with 1 indicating perfect agreement, scImpute consistently outperformed the raw data, MAGIC, and SAVER (Fig. 11). These results suggest that scImpute enhances the detection of cell subpopulations by effectively imputing dropout values. 
+
+<img src="Figure11_rand_index.png" width="1000"> 
+
+We next applied scImpute to a large droplet-based dataset10 comprising 4,500 peripheral blood mononuclear cells (PBMCs) from nine immune cell types, each represented by 500 cells. In the raw data, 92.6% of read counts are zeros. t-SNE27 visualization shows that cytotoxic and naive cytotoxic T cells cluster together, and four other T-cell subtypes are not well separated. After scImpute, cytotoxic (label 11) and naive cytotoxic T cells (label 8) become distinguishable, and naive T cells (label 5) and memory T cells (label 3) also separate clearly from the remaining T-cell populations (Fig. 12), demonstrating scImpute’s ability to recover subtle subpopulation structure. In contrast, MAGIC does not improve same-type clustering (Fig. 13), and SAVER outputs were not obtained after running the program overnight.
+
+<img src="Figure12_PBMC_scImpute.png" width="1000"> 
+
+<img src="Figure13_PBMC_MAGIC.png" width="1000"> 
 
 ## Discussion 
 
@@ -141,6 +151,7 @@ scImpute demonstrates good scalability as the number of cells increases. Its com
 # Reference
 
 Li, W.V., Li, J.J. An accurate and robust imputation method scImpute for single-cell RNA-seq data. Nat Commun 9, 997 (2018). https://doi.org/10.1038/s41467-018-03405-7
+
 
 
 
