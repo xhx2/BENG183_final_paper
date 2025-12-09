@@ -1,4 +1,4 @@
-# Using scImpute for Robust Single Cell RNAseq Imputation
+# scImpute for Robust Single Cell RNAseq Imputation
 ### By Hanxiang Xu, Kazune Fei, Yanpei Wang
 
 
@@ -161,6 +161,7 @@ scImpute demonstrates good scalability as the number of cells increases. Its com
 # Reference
 
 Li, W.V., Li, J.J. An accurate and robust imputation method scImpute for single-cell RNA-seq data. Nat Commun 9, 997 (2018). https://doi.org/10.1038/s41467-018-03405-7
+
 
 
 
