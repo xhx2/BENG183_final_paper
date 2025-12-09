@@ -18,7 +18,7 @@ scImpute is a two-stage statistical method built on the philosophy of targeted i
 
 <img src="figure_1_scImpute.png" width="1000">
 
-**Figure 1. Overview of the scImpute method** scImpute firstly learns each gene's dropout probability in each cell by fitting a mixture model. Next, scImpute imputes the highly probable dropout values in cell $j$ (gene set $A_j$) by borrowing information of the same gene in other similar cells, which are selected based on gene set $B_j$ (not severely affected by dropout events)
+**Fig. 1 Overview of the scImpute method** scImpute firstly learns each gene's dropout probability in each cell by fitting a mixture model. Next, scImpute imputes the highly probable dropout values in cell $j$ (gene set $A_j$) by borrowing information of the same gene in other similar cells, which are selected based on gene set $B_j$ (not severely affected by dropout events)
 
 ### Identification of Likely Dropouts
 
@@ -75,13 +75,13 @@ The ERCC spike-ins are synthetic RNA molecules with known concentrations which s
 
 <img src="figure2_ERCC_correlation.png" width="1000">
 
-**Figure 2. Correlation between ERCC spike-ins' counts and their true concentration**. The	two	distributions	show	the	correlations between	the	ERCC	spike-ins'	log10(count+1)	and	log	10(concentration)	in	the	3005	mouse	cortex	cells	(one	correlation	per	cell	for	raw	counts	or	counts	corrected	by	scImpute).
+**Fig. 2 Correlation between ERCC spike-ins' counts and their true concentration**. The	two	distributions	show	the	correlations between	the	ERCC	spike-ins'	log10(count+1)	and	log	10(concentration)	in	the	3005	mouse	cortex	cells	(one	correlation	per	cell	for	raw	counts	or	counts	corrected	by	scImpute).
 
 Figure 3 further shows that the read counts and true concentrations also present a stronger linear relationship in every single cell.
 
 <img src="figure3_ERCC_four_cells.png" width="1000">
 
-**Figure 3. scImpute improves the dropouts in the ERCC RNA scripts** The y-axis and x-axis give the ERCC spike-ins’ log10(count+1) and log10
+**Fig. 3 scImpute improves the dropouts in the ERCC RNA scripts** The y-axis and x-axis give the ERCC spike-ins’ log10(count+1) and log10
 (concentration) in four randomly selected mouse cortex cells. The imputed data present stronger linear relationships between the true concentrations and the observed counts
 
 #### scImpute correctly imputes the dropout values of 892 annotated cell cycle genes in 182 embryonic stem cells (ESCs) that had been staged for cell cycle phases (G1, G2M and S)
@@ -90,7 +90,7 @@ These genes are know to modulate the cell cycle and are expected to have non-zer
 
 <img src="figure4_ESC_heatmap.png" width="1000"> 
 
-**Figure 4 Heatmaps	showing	the	log10(count+1)	of	the	892	cell	cycle	genes	before	and	after	imputation.** . Rows	correspond	to	genes,	and	columns	correspond	to	cells.
+**Fig. 4 Heatmaps	showing	the	log10(count+1)	of	the	892	cell	cycle	genes	before	and	after	imputation.** . Rows	correspond	to	genes,	and	columns	correspond	to	cells.
 
 <img src="figure5_ESC_violin1.png" width="1000"> 
 
@@ -123,32 +123,27 @@ To demonstrate scImpute's ability to facilitate the identification of cell types
 
 <img src="Figure9_raw_zero_counts.png" width="1000"> 
 
-The	raw	and	imputed	gene expression levels of two	mouse	embryonic	cells	of the	16-cell	stage. Correlations	between	the	two	cells	are	marked on	the	top-left of	each scatter plot.
+**Fig. 9** The	raw	and	imputed	gene expression levels of two	mouse	embryonic	cells	of the	16-cell	stage. Correlations between the two cells are	marked on	the	top-left of	each scatter plot.
 
 We further compare the imputed data by examining clustering performance in the first two principal components (PCs). Although the major developmental stages can be roughly distinguished in the raw data, the imputed data by scImpute output more compact and coherent clusters (Fig. 10). MAGIC produces a clean developmental trajectory; however, many cells within the same stage collapse to nearly identical PC scores, indicating potential over-smoothing and loss of meaningful variation. Notably, scImpute is the only method capable of identifying outlier cells. 
 
 <img src="Figure10_cell_subpopulation1.png" width="1000"> 
-scImpute improves cell subpopulation clustering in the mouse embryonic cells. The scatter plots show the first two PCs obtained from the raw and
-imputed data of mouse embryonic cells. The black dots mark the outlier cells detected by scImpute
+**Fig. 10 scImpute improves cell subpopulation clustering in the mouse embryonic cells.** The scatter plots show the first two PCs obtained from the raw and imputed data of mouse embryonic cells. The black dots mark the outlier cells detected by scImpute
 
 To quantitatively evaluate clustering performance, we applied spectral clustering23 on the first two PCs with several choices of cluster numbers (k = 6, 8, 10, 12, 14), matching the hierarchical structure of the true developmental sub-stages. Using four metrics—adjusted Rand index24, Jaccard index25, normalized mutual information (NMI)26, and purity—all ranging from 0 to 1 and with 1 indicating perfect agreement, scImpute consistently outperformed the raw data, MAGIC, and SAVER (Fig. 11). These results suggest that scImpute enhances the detection of cell subpopulations by effectively imputing dropout values. 
 
 <img src="Figure11_rand_index.png" width="1000"> 
-The	adjusted	Rand	index,	Jaccard	index,	nmi,	and	purity	scores	of	clustering	results	based	on	
-the	raw	and	imputed	data. Clustering	is	performed	by	the	spectral	clustering	algorithm	[23]	on	the	single	cells'	scores	in	
-the	first	two	principal	components.
+**Fig. 11 The	adjusted Rand index, Jaccard	index, nmi, and	purity scores of clustering results	based	on the raw	and	imputed	data.** Clustering is performed	by the spectral clustering algorithm on the single cells' scores in	the	first	two	principal	components.
 
 We next applied scImpute to a large droplet-based dataset10 comprising 4,500 peripheral blood mononuclear cells (PBMCs) from nine immune cell types, each represented by 500 cells. In the raw data, 92.6% of read counts are zeros. t-SNE27 visualization shows that cytotoxic and naive cytotoxic T cells cluster together, and four other T-cell subtypes are not well separated. After scImpute, cytotoxic (label 11) and naive cytotoxic T cells (label 8) become distinguishable, and naive T cells (label 5) and memory T cells (label 3) also separate clearly from the remaining T-cell populations (Fig. 12), demonstrating scImpute’s ability to recover subtle subpopulation structure. In contrast, MAGIC does not improve same-type clustering (Fig. 13), and SAVER outputs were not obtained after running the program overnight.
 
 <img src="Figure12_PBMC_scImpute.png" width="1000"> 
 
-scImpute helps identify cell subpopulations in the PBMC dataset. The scatter plots give the first two dimensions of the t-SNE results calculated from
-raw and imputed PBMC dataset. Numbers marked on the imputed data are cluster labels. Cell type information is marked for major clusters. We note that
-for the raw data, we did not mask zero expression values as missing values in the dimension reduction and the clustering steps
+** Fig. 12 scImpute helps identify cell subpopulations in the PBMC dataset.** The scatter plots give the first two dimensions of the t-SNE results calculated from raw and imputed PBMC dataset. Numbers marked on the imputed data are cluster labels. Cell type information is marked for major clusters. We note that for the raw data, we did not mask zero expression values as missing values in the dimension reduction and the clustering steps. 
 
 <img src="Figure13_PBMC_MAGIC.png" width="1000"> 
 
-The	first	two	dimensions	of	the	t-SNE	results	calculated	from	imputed	PBMC	data	by	MAGIC.
+** Fig. 13 **The	first	two	dimensions of the	t-SNE	results	calculated from imputed PBMC data by MAGIC.
 
 
 ## Discussion 
@@ -165,6 +160,7 @@ scImpute demonstrates good scalability as the number of cells increases. Its com
 # Reference
 
 Li, W.V., Li, J.J. An accurate and robust imputation method scImpute for single-cell RNA-seq data. Nat Commun 9, 997 (2018). https://doi.org/10.1038/s41467-018-03405-7
+
 
 
 
